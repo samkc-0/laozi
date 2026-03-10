@@ -1,23 +1,44 @@
-import { APITester } from "./APITester";
+import versesSource from "../data/laozi.json";
 import "./index.css";
 
-import logo from "./logo.svg";
-import reactLogo from "./react.svg";
+const sentenceBreaks = /[。！？；]/u;
+const stripPunctuation = /[，。、！？；：]/gu;
+
+const verses = (versesSource as string[]).map((text, index) => {
+  const sentences = text
+    .trim()
+    .split(sentenceBreaks)
+    .map(sentence => sentence.replace(stripPunctuation, "").replace(/\s+/gu, "").trim())
+    .filter(Boolean)
+    .map(sentence => Array.from(sentence));
+
+  return {
+    id: index + 1,
+    sentences,
+  };
+});
 
 export function App() {
   return (
-    <div className="app">
-      <div className="logo-container">
-        <img src={logo} alt="Bun Logo" className="logo bun-logo" />
-        <img src={reactLogo} alt="React Logo" className="logo react-logo" />
+    <main className="reader" aria-label="道德經">
+      <div className="reader-track">
+        {verses.map(chapter => (
+          <article className="chapter" key={chapter.id}>
+            <div className="chapter-text" role="text">
+              {chapter.sentences.map((sentence, sentenceIndex) => (
+                <span className="sentence" key={`${chapter.id}-${sentenceIndex}`}>
+                  {sentence.map((character, characterIndex) => (
+                    <span className="character" key={`${chapter.id}-${sentenceIndex}-${characterIndex}`}>
+                      {character}
+                    </span>
+                  ))}
+                </span>
+              ))}
+            </div>
+          </article>
+        ))}
       </div>
-
-      <h1>Bun + React</h1>
-      <p>
-        Edit <code>src/App.tsx</code> and save to test HMR
-      </p>
-      <APITester />
-    </div>
+    </main>
   );
 }
 
