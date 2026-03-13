@@ -42,6 +42,19 @@ export function App() {
     }
 
     scroller.scrollLeft = scroller.scrollWidth - scroller.clientWidth;
+
+    let lastScrollLeft = scroller.scrollLeft;
+
+    const handleScroll = () => {
+      if (scroller.scrollLeft !== lastScrollLeft) {
+        setPinned(current => (current ? null : current));
+        lastScrollLeft = scroller.scrollLeft;
+      }
+    };
+
+    scroller.addEventListener("scroll", handleScroll, { passive: true });
+
+    return () => scroller.removeEventListener("scroll", handleScroll);
   }, []);
 
   const activeSelection = pinned ?? hovered;
