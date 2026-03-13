@@ -75,19 +75,6 @@ body {
   display: block;
 }
 
-.sentence {
-  display: inline;
-  padding-block: 0.08em;
-  border-radius: 0.2em;
-  transition:
-    background-color 120ms ease,
-    color 120ms ease;
-}
-
-.sentence:hover {
-  color: silver;
-}
-
 .character {
   display: inline;
   border-radius: 0.18em;
@@ -96,9 +83,12 @@ body {
     color 120ms ease;
 }
 
-.character:hover {
-  background: black;
-  color: #f8f3ea;
+.character.is-sentence-hovered {
+  color: silver;
+}
+.character.is-character-hovered {
+  background-color: black;
+  color: white;
 }
 
 @media (max-width: 700px) {
@@ -120,12 +110,8 @@ body {
 }
 
 @media (hover: none) and (pointer: coarse) {
-  .sentence:hover {
-    background: transparent;
-    color: inherit;
-  }
-
-  .character:hover {
+  .character.is-sentence-hovered,
+  .character.is-character-hovered {
     background: transparent;
     color: inherit;
   }
