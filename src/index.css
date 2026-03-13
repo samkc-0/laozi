@@ -50,7 +50,8 @@ body {
   left: var(--shell-inline-padding);
   width: var(--panel-width);
   z-index: 20;
-  pointer-events: none;
+  pointer-events: auto;
+  user-select: text;
 }
 
 .pinned-sentence p {
@@ -64,20 +65,33 @@ body {
   margin-top: 0.8rem;
   display: grid;
   gap: 0.55rem;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  text-align: left;
+  font: inherit;
+  cursor: pointer;
+  user-select: text;
 }
 
-.pinned-annotation-zh,
-.pinned-annotation-en {
+.pinned-annotation-label {
+  font-size: 0.72rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(28, 23, 18, 0.42);
+}
+
+.pinned-annotation-text {
   margin: 0;
   font-size: 0.92rem;
   line-height: 1.55;
 }
 
-.pinned-annotation-zh {
+.pinned-annotation-text.is-zh {
   color: rgba(28, 23, 18, 0.74);
 }
 
-.pinned-annotation-en {
+.pinned-annotation-text.is-en {
   color: rgba(28, 23, 18, 0.56);
 }
 
@@ -128,12 +142,14 @@ body {
   line-height: 1.7;
   letter-spacing: 0.08em;
   display: block;
+  user-select: text;
 }
 
 .character {
   display: inline;
   border-radius: 0.18em;
   cursor: pointer;
+  user-select: text;
   transition:
     background-color 120ms ease,
     color 120ms ease;
@@ -228,8 +244,7 @@ body {
     font-size: 1.05rem;
   }
 
-  .pinned-annotation-zh,
-  .pinned-annotation-en {
+  .pinned-annotation-text {
     font-size: 0.82rem;
   }
 

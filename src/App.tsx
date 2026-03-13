@@ -50,6 +50,9 @@ export function App() {
   const scrollerRef = useRef<HTMLDivElement | null>(null);
   const chapterRefs = useRef<Array<HTMLElement | null>>([]);
   const [currentChapter, setCurrentChapter] = useState(1);
+  const [annotationLanguage, setAnnotationLanguage] = useState<"zh" | "en">(
+    "zh",
+  );
   const [hovered, setHovered] = useState<{
     chapterId: number;
     sentenceIndex: number;
@@ -145,14 +148,38 @@ export function App() {
   const pinnedExplanationEn = pinned
     ? (annotationsEn[pinned.chapterId - 1]?.[pinned.sentenceIndex] ?? "")
     : "";
+  const pinnedExplanation =
+    annotationLanguage === "zh" ? pinnedExplanationZh : pinnedExplanationEn;
 
   return (
     <main className="reader-shell" aria-label="道德經">
       <aside className="pinned-sentence" aria-live="polite">
         <p>{pinnedSentence}</p>
-        <div className="pinned-annotation">
-          <p className="pinned-annotation-zh">{pinnedExplanationZh}</p>
-          <p className="pinned-annotation-en">{pinnedExplanationEn}</p>
+        <div
+          role="button"
+          tabIndex={0}
+          className="pinned-annotation"
+          onClick={() =>
+            setAnnotationLanguage((current) => (current === "zh" ? "en" : "zh"))
+          }
+          onKeyDown={(event) => {
+            if (event.key === "Enter" || event.key === " ") {
+              event.preventDefault();
+              setAnnotationLanguage((current) =>
+                current === "zh" ? "en" : "zh",
+              );
+            }
+          }}
+        >
+          <span
+            className={
+              annotationLanguage === "zh"
+                ? "pinned-annotation-text is-zh"
+                : "pinned-annotation-text is-en"
+            }
+          >
+            {pinnedExplanation}
+          </span>
         </div>
       </aside>
 
