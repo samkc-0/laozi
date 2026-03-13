@@ -1,4 +1,6 @@
 import { useEffect, useRef, useState } from "react";
+import sentenceAnnotationsEn from "../data/sentences.en.json";
+import sentenceAnnotationsZh from "../data/sentences.zh.json";
 import versesSource from "../data/laozi.json";
 import "./index.css";
 
@@ -20,6 +22,9 @@ const verses = (versesSource as string[]).map((text, index) => {
     sentences,
   };
 });
+
+const annotationsEn = sentenceAnnotationsEn as string[][];
+const annotationsZh = sentenceAnnotationsZh as string[][];
 
 function clampChapter(value: number) {
   return Math.min(verses.length, Math.max(1, value));
@@ -134,11 +139,21 @@ export function App() {
         "",
       ) ?? "")
     : "";
+  const pinnedExplanationZh = pinned
+    ? (annotationsZh[pinned.chapterId - 1]?.[pinned.sentenceIndex] ?? "")
+    : "";
+  const pinnedExplanationEn = pinned
+    ? (annotationsEn[pinned.chapterId - 1]?.[pinned.sentenceIndex] ?? "")
+    : "";
 
   return (
     <main className="reader-shell" aria-label="道德經">
       <aside className="pinned-sentence" aria-live="polite">
         <p>{pinnedSentence}</p>
+        <div className="pinned-annotation">
+          <p className="pinned-annotation-zh">{pinnedExplanationZh}</p>
+          <p className="pinned-annotation-en">{pinnedExplanationEn}</p>
+        </div>
       </aside>
 
       <div className="reader" ref={scrollerRef}>
