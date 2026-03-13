@@ -44,6 +44,22 @@ body {
   padding: var(--shell-block-padding) var(--shell-inline-padding);
 }
 
+.pinned-sentence {
+  position: fixed;
+  top: var(--shell-block-padding);
+  left: var(--shell-inline-padding);
+  width: var(--panel-width);
+  z-index: 20;
+  pointer-events: none;
+}
+
+.pinned-sentence p {
+  margin: 0;
+  font-size: 1rem;
+  line-height: 1.45;
+  color: rgba(28, 23, 18, 0.76);
+}
+
 .reader {
   width: 100%;
   height: 100%;
@@ -91,17 +107,28 @@ body {
 .character {
   display: inline;
   border-radius: 0.18em;
+  cursor: pointer;
   transition:
     background-color 120ms ease,
     color 120ms ease;
 }
 
-.character.is-sentence-hovered {
+.character.is-pinned-sentence {
+  color: #5f564b;
+  background: rgba(125, 109, 84, 0.14);
+}
+
+.character.is-pinned-character {
+  background: rgba(54, 48, 39, 0.85);
+  color: #f7f1e6;
+}
+
+.character.is-hovered-sentence {
   color: #7a4d14;
   background: rgba(196, 140, 48, 0.18);
 }
 
-.character.is-character-hovered {
+.character.is-hovered-character {
   background-color: #1f4f82;
   color: #f8f3ea;
 }
@@ -158,11 +185,17 @@ body {
     line-height: 1.45;
     letter-spacing: 0.05em;
   }
+
+  .pinned-sentence p {
+    font-size: 0.92rem;
+  }
 }
 
 @media (hover: none) and (pointer: coarse) {
-  .character.is-sentence-hovered,
-  .character.is-character-hovered {
+  .character.is-pinned-sentence,
+  .character.is-pinned-character,
+  .character.is-hovered-sentence,
+  .character.is-hovered-character {
     background: transparent;
     color: inherit;
   }

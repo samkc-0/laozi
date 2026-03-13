@@ -27,6 +27,12 @@ export function App() {
     characterIndex: number;
     character: string;
   } | null>(null);
+  const [pinned, setPinned] = useState<{
+    chapterId: number;
+    sentenceIndex: number;
+    characterIndex: number;
+    character: string;
+  } | null>(null);
 
   useEffect(() => {
     const scroller = scrollerRef.current;
@@ -38,32 +44,42 @@ export function App() {
     scroller.scrollLeft = scroller.scrollWidth - scroller.clientWidth;
   }, []);
 
+  const activeSelection = pinned ?? hovered;
+  const pinnedSentence =
+    pinned ? verses[pinned.chapterId - 1]?.sentences[pinned.sentenceIndex]?.join("") ?? "" : "";
+
   return (
     <main className="reader-shell" aria-label="道德經">
+      <aside className="pinned-sentence" aria-live="polite">
+        <p>{pinnedSentence}</p>
+      </aside>
+
       <div className="reader" ref={scrollerRef}>
         <div className="reader-track">
-          {verses.map((chapter, chapterIndex) => (
-            <article
-              className="chapter"
-              key={chapter.id}
-            >
+          {verses.map(chapter => (
+            <article className="chapter" key={chapter.id}>
               <div
                 className="chapter-text"
                 role="text"
-                onMouseLeave={() => setHovered(current => (current?.chapterId === chapter.id ? null : current))}
+                onMouseLeave={() => setHovered(null)}
               >
                 {chapter.sentences.map((sentence, sentenceIndex) =>
                   sentence.map((character, characterIndex) => {
-                    const isSentenceHovered =
+                    const isPinnedSentence =
+                      pinned?.chapterId === chapter.id && pinned.sentenceIndex === sentenceIndex;
+                    const isPinnedCharacter = isPinnedSentence && pinned.characterIndex === characterIndex;
+                    const isHoveredSentence =
                       hovered?.chapterId === chapter.id && hovered.sentenceIndex === sentenceIndex;
-                    const isCharacterHovered = isSentenceHovered && hovered.characterIndex === characterIndex;
+                    const isHoveredCharacter = isHoveredSentence && hovered.characterIndex === characterIndex;
 
                     return (
                       <span
                         className={[
                           "character",
-                          isSentenceHovered ? "is-sentence-hovered" : "",
-                          isCharacterHovered ? "is-character-hovered" : "",
+                          isPinnedSentence ? "is-pinned-sentence" : "",
+                          isPinnedCharacter ? "is-pinned-character" : "",
+                          isHoveredSentence ? "is-hovered-sentence" : "",
+                          isHoveredCharacter ? "is-hovered-character" : "",
                         ]
                           .filter(Boolean)
                           .join(" ")}
@@ -75,6 +91,20 @@ export function App() {
                             characterIndex,
                             character,
                           });
+                        }}
+                        onClick={() => {
+                          setPinned(current =>
+                            current?.chapterId === chapter.id &&
+                            current.sentenceIndex === sentenceIndex &&
+                            current.characterIndex === characterIndex
+                              ? null
+                              : {
+                                  chapterId: chapter.id,
+                                  sentenceIndex,
+                                  characterIndex,
+                                  character,
+                                }
+                          );
                         }}
                       >
                         {character}
@@ -89,12 +119,12 @@ export function App() {
       </div>
 
       <aside className="character-popup" aria-live="polite">
-        <p className="popup-character">{hovered?.character ?? "道"}</p>
-        <p className="popup-pinyin">placeholder pinyin</p>
+        <p className="popup-character">{activeSelection?.character ?? ""}</p>
+        <p className="popup-pinyin">{activeSelection ? "placeholder pinyin" : ""}</p>
         <p className="popup-definition">
-          {hovered
+          {activeSelection
             ? "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
-            : "Hover a character to inspect it here. Lorem ipsum dolor sit amet, consectetur adipiscing elit."}
+            : ""}
         </p>
       </aside>
     </main>
