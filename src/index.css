@@ -1,7 +1,8 @@
 :root {
-  --reader-inline-padding: clamp(1.5rem, 3vw, 2.75rem);
-  --reader-block-padding: clamp(1rem, 2.2vw, 1.75rem);
-  --chapter-tail-padding: clamp(0.75rem, 1vw, 1rem);
+  --shell-inline-padding: clamp(1rem, 2.2vw, 1.6rem);
+  --shell-block-padding: clamp(0.9rem, 2vw, 1.4rem);
+  --page-padding-inline: clamp(1.1rem, 2.4vw, 1.8rem);
+  --page-padding-block: clamp(1rem, 2vw, 1.6rem);
   font-family:
     "Noto Sans TC", "Noto Sans SC", "PingFang TC", "Microsoft JhengHei",
     sans-serif;
@@ -36,14 +37,19 @@ body {
     linear-gradient(180deg, #f7f2e7 0%, #efe6d5 100%);
 }
 
-.reader {
+.reader-shell {
   width: 100%;
   height: 100dvh;
+  padding: var(--shell-block-padding) var(--shell-inline-padding);
+}
+
+.reader {
+  width: 100%;
+  height: 100%;
   overflow-x: auto;
   overflow-y: hidden;
-  padding-inline: var(--reader-inline-padding);
-  padding-block: var(--reader-block-padding);
-  scrollbar-color: rgba(22, 17, 13, 0.35) transparent;
+  scrollbar-color: rgba(22, 17, 13, 0.3) transparent;
+  scroll-snap-type: x mandatory;
   direction: rtl;
   -webkit-overflow-scrolling: touch;
   overscroll-behavior-x: contain;
@@ -55,23 +61,27 @@ body {
   width: max-content;
   display: flex;
   flex-direction: row;
-  gap: clamp(1.25rem, 2vw, 2rem);
 }
 
 .chapter {
-  inline-size: calc(100dvh - (var(--reader-block-padding) * 2));
-  writing-mode: vertical-rl;
-  padding-inline-start: 0;
-  padding-inline-end: var(--chapter-tail-padding);
+  width: calc(100vw - (var(--shell-inline-padding) * 2));
+  min-width: calc(100vw - (var(--shell-inline-padding) * 2));
+  height: 100%;
+  padding: var(--page-padding-block) var(--page-padding-inline);
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
   overflow: hidden;
 }
 
 .chapter-text {
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+  text-align: start;
   margin: 0;
-  font-size: clamp(2rem, 3vw, 3.6rem);
+  inline-size: 100%;
+  font-size: clamp(2rem, 3vw, 3.55rem);
   line-height: 1.7;
   letter-spacing: 0.08em;
-  inline-size: 100%;
   display: block;
 }
 
@@ -84,12 +94,13 @@ body {
 }
 
 .character.is-sentence-hovered {
-  color: silver;
+  color: #7a4d14;
+  background: rgba(196, 140, 48, 0.18);
 }
 
 .character.is-character-hovered {
-  background-color: black;
-  color: white;
+  background-color: #1f4f82;
+  color: #f8f3ea;
 }
 
 .character-popup {
@@ -135,13 +146,10 @@ body {
 
 @media (max-width: 700px) {
   :root {
-    --reader-inline-padding: 0.75rem;
-    --reader-block-padding: 0.75rem;
-    --chapter-tail-padding: 0.65rem;
-  }
-
-  .reader-track {
-    gap: 0.7rem;
+    --shell-inline-padding: 0.75rem;
+    --shell-block-padding: 0.75rem;
+    --page-padding-inline: 0.9rem;
+    --page-padding-block: 0.8rem;
   }
 
   .chapter-text {
