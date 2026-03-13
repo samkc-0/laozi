@@ -76,6 +76,7 @@ body {
 .chapter-text {
   writing-mode: vertical-rl;
   text-orientation: mixed;
+  direction: ltr;
   text-align: start;
   margin: 0;
   inline-size: 100%;
