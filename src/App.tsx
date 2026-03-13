@@ -24,6 +24,9 @@ export function App() {
     chapterId: number;
     sentenceIndex: number;
     characterIndex: number;
+    character: string;
+    x: number;
+    y: number;
   } | null>(null);
 
   return (
@@ -52,13 +55,18 @@ export function App() {
                         .filter(Boolean)
                         .join(" ")}
                       key={`${chapter.id}-${sentenceIndex}-${characterIndex}`}
-                      onMouseEnter={() =>
+                      onMouseEnter={event => {
+                        const rect = event.currentTarget.getBoundingClientRect();
+
                         setHovered({
                           chapterId: chapter.id,
                           sentenceIndex,
                           characterIndex,
-                        })
-                      }
+                          character,
+                          x: Math.min(rect.left + 28, window.innerWidth - 300),
+                          y: Math.min(rect.bottom + 16, window.innerHeight - 180),
+                        });
+                      }}
                     >
                       {character}
                     </span>
@@ -69,6 +77,22 @@ export function App() {
           </article>
         ))}
       </div>
+      {hovered ? (
+        <aside
+          className="character-popup"
+          style={{
+            left: `${Math.max(16, hovered.x)}px`,
+            top: `${Math.max(16, hovered.y)}px`,
+          }}
+        >
+          <p className="popup-character">{hovered.character}</p>
+          <p className="popup-pinyin">placeholder pinyin</p>
+          <p className="popup-definition">
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
+            labore et dolore magna aliqua.
+          </p>
+        </aside>
+      ) : null}
     </main>
   );
 }

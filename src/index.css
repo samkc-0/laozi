@@ -86,9 +86,51 @@ body {
 .character.is-sentence-hovered {
   color: silver;
 }
+
 .character.is-character-hovered {
   background-color: black;
   color: white;
+}
+
+.character-popup {
+  position: fixed;
+  z-index: 20;
+  width: min(280px, calc(100vw - 2rem));
+  padding: 0.9rem 1rem 1rem;
+  background: rgba(250, 246, 239, 0.94);
+  color: #1c1712;
+  border: 1px solid rgba(28, 23, 18, 0.12);
+  border-radius: 1rem;
+  box-shadow: 0 18px 45px rgba(40, 29, 16, 0.12);
+  backdrop-filter: blur(14px);
+  pointer-events: none;
+}
+
+.popup-character,
+.popup-pinyin,
+.popup-definition {
+  margin: 0;
+}
+
+.popup-character {
+  font-size: 2rem;
+  line-height: 1;
+  letter-spacing: 0.04em;
+}
+
+.popup-pinyin {
+  margin-top: 0.35rem;
+  font-size: 0.78rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(28, 23, 18, 0.52);
+}
+
+.popup-definition {
+  margin-top: 0.7rem;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  color: rgba(28, 23, 18, 0.82);
 }
 
 @media (max-width: 700px) {
@@ -114,5 +156,9 @@ body {
   .character.is-character-hovered {
     background: transparent;
     color: inherit;
+  }
+
+  .character-popup {
+    display: none;
   }
 }
