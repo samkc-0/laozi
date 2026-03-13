@@ -67,11 +67,16 @@ body {
   overflow-y: hidden;
   padding-left: calc(var(--panel-width) + 1rem);
   scrollbar-color: rgba(22, 17, 13, 0.3) transparent;
+  scrollbar-width: none;
   scroll-snap-type: x mandatory;
   direction: rtl;
   -webkit-overflow-scrolling: touch;
   overscroll-behavior-x: contain;
   touch-action: pan-x;
+}
+
+.reader::-webkit-scrollbar {
+  display: none;
 }
 
 .reader-track {
@@ -171,6 +176,18 @@ body {
   color: rgba(28, 23, 18, 0.72);
 }
 
+.chapter-indicator {
+  position: fixed;
+  left: 50%;
+  bottom: var(--shell-block-padding);
+  transform: translateX(-50%);
+  z-index: 20;
+  font-size: 0.95rem;
+  letter-spacing: 0.12em;
+  color: rgba(28, 23, 18, 0.58);
+  pointer-events: none;
+}
+
 @media (max-width: 700px) {
   :root {
     --shell-inline-padding: 0.75rem;
@@ -188,6 +205,10 @@ body {
 
   .pinned-sentence p {
     font-size: 1.05rem;
+  }
+
+  .chapter-indicator {
+    font-size: 0.82rem;
   }
 }
 
