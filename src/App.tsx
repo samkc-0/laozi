@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import dictionarySource from "../dictionary/moedict-laozi.json";
 import sentenceAnnotationsEn from "../data/sentences.en.json";
 import sentenceAnnotationsZh from "../data/sentences.zh.json";
 import versesSource from "../data/laozi.json";
@@ -25,6 +26,23 @@ const verses = (versesSource as string[]).map((text, index) => {
 
 const annotationsEn = sentenceAnnotationsEn as string[][];
 const annotationsZh = sentenceAnnotationsZh as string[][];
+const dictionaryVariantMap: Record<string, string> = {
+  衆: "眾",
+};
+const dictionaryEntries = dictionarySource as Array<{
+  title: string;
+  heteronyms?: Array<{
+    bopomofo?: string;
+    pinyin?: string;
+    definitions?: Array<{
+      def?: string;
+      type?: string;
+    }>;
+  }>;
+}>;
+const dictionaryByTitle = new Map(
+  dictionaryEntries.map((entry) => [entry.title, entry]),
+);
 
 function clampChapter(value: number) {
   return Math.min(verses.length, Math.max(1, value));
@@ -137,6 +155,23 @@ export function App() {
   }, []);
 
   const activeSelection = pinned ?? hovered;
+  const activeDictionaryEntry = activeSelection
+    ? dictionaryByTitle.get(
+        dictionaryVariantMap[activeSelection.character] ?? activeSelection.character,
+      )
+    : null;
+  const activeHeteronym = activeDictionaryEntry?.heteronyms?.[0] ?? null;
+  const activeDefinitions =
+    activeHeteronym?.definitions
+      ?.map((definition) =>
+        definition.type
+          ? `${definition.type}：${definition.def ?? ""}`
+          : (definition.def ?? ""),
+      )
+      .filter(Boolean)
+      .slice(0, 3)
+      .join(" ")
+      ?? "";
   const pinnedSentence = pinned
     ? (verses[pinned.chapterId - 1]?.sentences[pinned.sentenceIndex]?.join(
         "",
@@ -263,12 +298,10 @@ export function App() {
       <aside className="character-popup" aria-live="polite">
         <p className="popup-character">{activeSelection?.character ?? ""}</p>
         <p className="popup-pinyin">
-          {activeSelection ? "placeholder pinyin" : ""}
+          {(activeHeteronym?.pinyin?.toLowerCase() ?? activeHeteronym?.bopomofo ?? "")}
         </p>
         <p className="popup-definition">
-          {activeSelection
-            ? "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
-            : ""}
+          {activeDefinitions}
         </p>
       </aside>
 
