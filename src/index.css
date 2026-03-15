@@ -230,7 +230,45 @@ body {
     --shell-block-padding: 0.75rem;
     --page-padding-inline: 0.9rem;
     --page-padding-block: 0.8rem;
-    --panel-width: min(280px, calc(100vw - 1.5rem));
+    --panel-width: calc(100vw - 1.5rem);
+    --mobile-top-height: 22dvh;
+    --mobile-bottom-height: 26dvh;
+  }
+
+  .reader-shell {
+    padding: 0;
+  }
+
+  .pinned-sentence {
+    top: var(--shell-block-padding);
+    left: var(--shell-inline-padding);
+    width: var(--panel-width);
+    max-height: calc(var(--mobile-top-height) - var(--shell-block-padding));
+    overflow-y: auto;
+    padding-right: 0.2rem;
+  }
+
+  .reader {
+    position: fixed;
+    top: var(--mobile-top-height);
+    left: 0;
+    width: 100%;
+    height: calc(100dvh - var(--mobile-top-height) - var(--mobile-bottom-height));
+    padding-left: 0;
+  }
+
+  .chapter {
+    width: 100vw;
+    min-width: 100vw;
+  }
+
+  .character-popup {
+    left: var(--shell-inline-padding);
+    bottom: var(--shell-block-padding);
+    width: var(--panel-width);
+    max-height: calc(var(--mobile-bottom-height) - var(--shell-block-padding));
+    overflow-y: auto;
+    padding-right: 0.2rem;
   }
 
   .chapter-text {
@@ -249,6 +287,7 @@ body {
 
   .chapter-indicator {
     font-size: 0.82rem;
+    bottom: calc(var(--mobile-bottom-height) + 0.25rem);
   }
 }
 
