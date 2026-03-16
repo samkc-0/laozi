@@ -64,6 +64,24 @@ function toChineseNumeral(value: number) {
   return `${digits[tens]}十${ones === 0 ? "" : digits[ones]}`;
 }
 
+function parseExampleLine(line: string) {
+  const match = line.match(/^(\d+\.)\s*(.+?。)\s*(.*)$/u);
+
+  if (!match) {
+    return {
+      number: "",
+      sentence: line,
+      gloss: "",
+    };
+  }
+
+  return {
+    number: match[1],
+    sentence: match[2],
+    gloss: match[3],
+  };
+}
+
 export function App() {
   const scrollerRef = useRef<HTMLDivElement | null>(null);
   const chapterRefs = useRef<Array<HTMLElement | null>>([]);
@@ -185,6 +203,9 @@ export function App() {
     : "";
   const pinnedExplanation =
     annotationLanguage === "zh" ? pinnedExplanationZh : pinnedExplanationEn;
+  const pinnedExamples = pinnedExplanation
+    ? pinnedExplanation.split("\n").filter(Boolean).map(parseExampleLine)
+    : [];
 
   return (
     <main className="reader-shell" aria-label="道德經">
@@ -206,15 +227,21 @@ export function App() {
             }
           }}
         >
-          <span
+          <ol
             className={
               annotationLanguage === "zh"
-                ? "pinned-annotation-text is-zh"
-                : "pinned-annotation-text is-en"
+                ? "pinned-annotation-list is-zh"
+                : "pinned-annotation-list is-en"
             }
           >
-            {pinnedExplanation}
-          </span>
+            {pinnedExamples.map((example, index) => (
+              <li className="pinned-annotation-item" key={`${index}-${example.number}`}>
+                <span className="pinned-annotation-item-number">{example.number}</span>
+                <span className="pinned-annotation-item-sentence">{example.sentence}</span>
+                <span className="pinned-annotation-item-gloss">{example.gloss}</span>
+              </li>
+            ))}
+          </ol>
         </div>
       </aside>
 
