@@ -82,6 +82,34 @@ function parseExampleLine(line: string) {
   };
 }
 
+function toCircledNumber(value: number) {
+  const circled = [
+    "",
+    "①",
+    "②",
+    "③",
+    "④",
+    "⑤",
+    "⑥",
+    "⑦",
+    "⑧",
+    "⑨",
+    "⑩",
+    "⑪",
+    "⑫",
+    "⑬",
+    "⑭",
+    "⑮",
+    "⑯",
+    "⑰",
+    "⑱",
+    "⑲",
+    "⑳",
+  ];
+
+  return circled[value] ?? `${value}.`;
+}
+
 export function App() {
   const scrollerRef = useRef<HTMLDivElement | null>(null);
   const chapterRefs = useRef<Array<HTMLElement | null>>([]);
@@ -236,8 +264,9 @@ export function App() {
           >
             {pinnedExamples.map((example, index) => (
               <li className="pinned-annotation-item" key={`${index}-${example.number}`}>
-                <span className="pinned-annotation-item-number">{example.number}</span>
-                <span className="pinned-annotation-item-sentence">{example.sentence}</span>
+                <span className="pinned-annotation-item-sentence">
+                  {toCircledNumber(index + 1)} {example.sentence}
+                </span>
                 <span className="pinned-annotation-item-gloss">{example.gloss}</span>
               </li>
             ))}
